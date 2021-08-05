@@ -1,6 +1,7 @@
 import random
 import math
 import pygame
+from pygame.draw import rect
 
 # class includes methods to draw the map itself
 class RRTMap:
@@ -15,8 +16,8 @@ class RRTMap:
         pygame.display.set_caption(self.mapWindowName)
         self.map = pygame.display.set_mode((self.mapw, self.maph))
         self.map.fill((255,255,255))
-        self.noderad = 0
-        self.nodeThickness = 0
+        self.noderad = 2
+        self.nodeThickness = 2
         self.edgeThickness = 1
         self.obstacles = []
         self.obsDim = obsDim
@@ -109,31 +110,62 @@ class RRTGraph:
         self.y.pop(n)
 
     def add_edge(self, parent, child):
-        pass
+        self.parent.insert(child,parent)      
 
-    def remove_edge(self):
-        pass
+    def remove_edge(self,n):
+        self.parent.pop(n)
 
     def number_of_nodes(self):
-        pass
+        return len(self.x)
 
-    def distance(self):
-        pass
+    def distance(self, n1, n2):
+        (x1, y1) = (self.x[n1], self.y[n1])
+        (x2, y2) = (self.x[n2], self.y[n2])
+        px = (float(x1) -float(x2))**2
+        py = (float(y1) -float(y2))**2
 
-    def distance(self):
-        pass
+        return (px+py)**0.5
+
+    def sample_env(self):
+        x = int(random.uniform(0, self.mapw))
+        y = int(random.uniform(0, self.maph))
+        return x,y
 
     def nearest(self):
         pass
 
     def isFree(self):
-        pass
+        n = self.number_of_nodes()-1
+        (x, y) = (self.x[n], self.y[n])
+        obs = self.obstacles.copy()
+        while len(obs)>0:
+            rect = obs.pop(0)
+            if rect.collidepoint(x,y):
+                self.remove_node(n)
+                return False
+        return True
 
-    def crossObstacle(self):
-        pass
+    def crossObstacle(self, x1, x2, y1, y2):
+        # connection between two nodes crosses obstacle or not
+        obs = self.obstacles.copy()
+        while (len(obs)>0):
+            rect = obs.pop(0)
+            for i in range(0, 101):
+                u = i/100
+                y = y1*u + y2*(1-u)
+                x = x1*u + x2*(1-u)
+            if rect.collidepoint(x,y):
+                return True
+        return False
 
-    def connect(self):
-        pass
+    def connect(self, n1, n2):
+        (x1, y1) = (self.x[n1], self.y[n1])
+        (x2, y2) = (self.x[n2], self.y[n2])
+        if self.crossObstacle(x1, x2, y1, y2):
+            self.remove_node(n2)
+            return False
+        else:
+            return True
 
     def step(self):
         pass
