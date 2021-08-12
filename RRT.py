@@ -160,7 +160,8 @@ class RRTGraph:
                 y = y1*u + y2*(1-u)
                 x = x1*u + x2*(1-u)
                 if rect.collidepoint(x,y):
-                    return False
+                    return True
+        return False
 
     def connect(self, n1, n2):
         (x1, y1) = (self.x[n1], self.y[n1])
