@@ -31,7 +31,7 @@ def main():
         
     #    pygame.display.update()
 
-    while (iteration<500):
+    while (not graph.path_to_goal()):
         if iteration % 10 == 0:
             X , Y, Parent = graph.bias(goal)
             pygame.draw.circle(map.map, map.grey, (X[-1], Y[-1]), map.noderad+2, 0)
@@ -46,10 +46,18 @@ def main():
         if iteration % 10 == 0:
             pygame.display.update()
         iteration += 1
- 
+    
+    map.drawPath(graph.getPathCoords())
+
     pygame.display.update()
     pygame.event.clear()
     pygame.event.wait(0)
 
 if __name__ == '__main__':
-    main()
+    result = False
+    while not result:
+        try:
+            main()
+            result = True
+        except:
+            result = False
