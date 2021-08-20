@@ -66,7 +66,7 @@ def main():
     numobs = 10
     obsLength = 4.5; obsHeight = 2.5
     obsList = []
-
+    
     start = (int(np.random.uniform(0, 100)), int(np.random.uniform(0, 100)))
     goal = (int(np.random.uniform(0, 100)), int(np.random.uniform(0, 100)))
 
@@ -82,7 +82,7 @@ def main():
     #        yobs[n][t] = b * np.sin(theta[t]) + obsy[n]
 
     fig, ax = plt.subplots(1)
-    ax.plot([start[0], goal[0]], [start[1], goal[1]],'b-')
+    #ax.plot([start[0], goal[0]], [start[1], goal[1]],'b-')
     #ax.plot([start[0], goal[0]], [start[1], goal[1]], marker = '.', markerfacecolor = 'b', markersize = 10)
     #ax.plot(goal[0], goal[1], marker = '.', markerfacecolor = 'g', markersize = 10)
 
@@ -91,9 +91,13 @@ def main():
         y = zip(obsList[n].y, obsList[n].y[1:]+obsList[n].y[:-3])
         for px, py in zip(x, y):
             ax.plot(list(px), list(py), 'r-')
-        
-    c = checkCollision(start, goal, obsList)
-    print(c)
+    iter = 0
+    while (iter < 500):
+        p1 = (int(np.random.uniform(0, 100)), int(np.random.uniform(0, 100)))
+        p2 = (int(np.random.uniform(0, 100)), int(np.random.uniform(0, 100)))
+        if not checkCollision(p1, p2, obsList):
+            ax.plot([p1[0], p2[0]], [p1[1], p2[1]], 'k-')
+        iter += 1
 
     plt.show()
 
